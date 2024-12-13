@@ -7,7 +7,7 @@
 **Authors:**  
 Lucas Rebuffet<sup>1</sup>, Janine E. Melsen<sup>2,3</sup>, Bertrand Escalière<sup>1</sup>, Daniela Basurto-Lozada<sup>4,5</sup>, Avinash Bhandoola<sup>6</sup>, Niklas K. Björkström<sup>7</sup>, Yenan T. Bryceson<sup>8</sup>, Roberta Castriconi<sup>9,10</sup>, Frank Cichocki<sup>11</sup>, Marco Colonna<sup>12</sup>, Daniel M. Davis<sup>13</sup>, Andreas Diefenbach<sup>14,15</sup>, Yi Ding<sup>6</sup>, Muzlifah Haniffa<sup>4,5,16</sup>, Amir Horowitz<sup>17,18,19</sup>, Lewis L. Lanier<sup>20</sup>, Karl-Johan Malmberg<sup>7,21,22</sup>, Jeffrey S. Miller<sup>11</sup>, Lorenzo Moretta<sup>23</sup>, Emilie Narni-Mancinelli<sup>1</sup>, Luke A.J. O’Neill<sup>24</sup>, Chiara Romagnani<sup>25,26,27</sup>, Dylan G. Ryan<sup>28</sup>, Simona Sivori<sup>9,29</sup>, Dan Sun<sup>7</sup>, Constance Vagne<sup>30</sup>, Eric Vivier<sup>1,30,31,32</sup>*  
 
-<small>
+<sup><sub>
 1. Aix Marseille Université, CNRS, INSERM, Centre d'Immunologie de Marseille-Luminy, Marseille, France.  
 2. Leiden University Medical Center, Willem-Alexander Children’s Hospital, Laboratory for Pediatric Immunology, Leiden, The Netherlands.  
 3. Leiden University Medical Center, Department of Immunology, Leiden, The Netherlands.  
@@ -41,7 +41,7 @@ Lucas Rebuffet<sup>1</sup>, Janine E. Melsen<sup>2,3</sup>, Bertrand Escalière<
 31. APHM, Hôpital de la Timone, Marseille-Immunopôle, Marseille, France.  
 32. Paris-Saclay Cancer Cluster, Le Kremlin-Bicêtre, France.  
 * Corresponding author: vivier@ciml.univ-mrs.fr  
-</small>
+</sub></sup>
 
 
 
