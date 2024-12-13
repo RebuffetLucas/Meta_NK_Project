@@ -7,8 +7,8 @@
 **Authors:**
 Lucas Rebuffet,1, Janine E. Melsen,2,3, Bertrand Escalière,1, Daniela Basurto-Lozada,4,5, Avinash Bhandoola,6, Niklas K. Björkström,7, Yenan T. Bryceson,8, Roberta Castriconi9,10, Frank Cichocki,11, Marco Colonna,12, Daniel M. Davis,13, Andreas Diefenbach,14,15, Yi Ding,6, Muzlifah Haniffa,4,5,16, Amir Horowitz,17,18,19, Lewis L. Lanier,20, Karl-Johan Malmberg,7,21,22, Jeffrey S. Miller,11, Lorenzo Moretta,23, Emilie Narni-Mancinelli,1, Luke A.J. O’Neill,24, Chiara Romagnani,25,26,27, Dylan G. Ryan,28, Simona Sivori,9,29, Dan Sun,7, Constance Vagne,30, Eric Vivier,1,30,31,32*
 
-
-1Aix Marseille Université, CNRS, INSERM, Centre d'Immunologie de Marseille-Luminy, Marseille, France.
+<small>
+1 Aix Marseille Université, CNRS, INSERM, Centre d'Immunologie de Marseille-Luminy, Marseille, France.
 2 Leiden University Medical Center, Willem-Alexander Children’s Hospital, Laboratory for Pediatric Immunology, Leiden, The Netherlands.
 3 Leiden University Medical Center, Department of Immunology, Leiden, The Netherlands.
 4 Wellcome Sanger Institute, Wellcome Genome Campus, Cambridge CB10 1SA, UK.
@@ -40,7 +40,7 @@ Lucas Rebuffet,1, Janine E. Melsen,2,3, Bertrand Escalière,1, Daniela Basurto-L
 31 APHM, Hôpital de la Timone, Marseille-Immunopôle, Marseille, France. 
 32 Paris-Saclay Cancer Cluster, Le Kremlin-Bicêtre, France.
 * Corresponding author: vivier@ciml.univ-mrs.fr
-
+</small>
 
 
 **Summary:**
@@ -91,7 +91,7 @@ The `03_Script` directory organizes code into modules, each addressing specific 
    - The subsets were further identified in healthy tissues (*03_Script/22_Comparing_Colonna_Paper*) and tumors (*03_Script/11_Comparing_Tang_Paper*). 
 
 3. **Gene Regulation Networks (GRNs)** 
-   - Regulatory network analysis using SCENIC+ (*03_Script/02_RegulatoryNetworkAnalysis*) highlighted key transcription factors driving the functional specialization of NK subsets. 
+   - Regulatory network analysis using SCENIC (*03_Script/02_RegulatoryNetworkAnalysis*) highlighted key transcription factors driving the functional specialization of NK subsets. 
 
 4. **Functional and Metabolic Profiling** 
    - Functional annotation using gene ontology and KEGG enrichment (*03_Script/03_GO_KEGG*) characterized the unique biological roles of NK subsets. 
