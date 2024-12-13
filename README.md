@@ -52,5 +52,67 @@ This github project contains the instructions and material to reproduce the anal
 Source code (scripts and dockerfiles) are available in the github repository. 
 
 
+## Repository Structure: `03_Script`
+
+The `03_Script` directory organizes code into modules, each addressing specific analyses or explorations: 
+
+```plaintext
+03_Script/
+├── 01_GlobalHeterogeneity               # Emergence of a new NK classification from meta-analysis
+├── 02_RegulatoryNetworkAnalysis         # SCENIC+ analysis to identify regulatory elements
+├── 03_GO_KEGG                           # Functional profiling via gene ontology and KEGG enrichment
+├── 04_RNAvelocity                       # RNA velocity analysis for differentiation trajectories
+├── 05_Monocle                           # Monocle3 analysis for trajectory inference
+├── 10_VerifOnV3Romagnani                # Verification of classification on external datasets
+├── 11_Comparing_Tang_Paper              # Comparison with tumor datasets from Tang's paper
+├── 12_Using_CITEseq_Seurat              # Analysis of CITE-seq data in Seurat
+├── 13_Destiny                           # Diffusion map analysis for trajectory identification
+├── 14_SCTonOurData                      # Single-cell transformation preprocessing
+├── 17_Metabo_Investigation              # Metabolic profiling of NK cell subsets
+├── 19_SetUp_Data_Portal                 # Setting up the data portal for public access
+├── 21_FACS_Data_Additional_analysis     # Flow cytometry additional analyses
+├── 22_Comparing_Colonna_Paper           # Verification of NK subsets in healthy tissues
+├── 23_MarkerCount_Analysis              # Marker count analysis for subsets
+├── 24_Check_LabelTransfer_Reliability   # Evaluating label transfer reliability
+├── 25_Check_Signatures_Discrim_NK       # Assessing discriminative power of signatures
+└── 26_Cytosig_Analysis                  # Analysis of NK response to cytokines
+
+```
+
+# Meta-NK Consortium: A Standardized Terminology for Studying Human Natural Killer (NK) Cells in Health and Disease
+
+## Key Results
+
+1. **A New Classification for NK Cells** 
+   - Based on meta-analysis of single-cell data, this study introduces a novel classification of NK cells (*03_Script/01_GlobalHeterogeneity*), identifying three primary subsets (*NK1, NK2, NK3*) and six distinct subgroups with unique molecular and functional profiles. 
+
+2. **Verification Across Datasets and Tissues** 
+   - The proposed classification was validated across external datasets (*03_Script/10_VerifOnV3Romagnani*), confirming its robustness. 
+   - The subsets were further identified in healthy tissues (*03_Script/22_Comparing_Colonna_Paper*) and tumors (*03_Script/11_Comparing_Tang_Paper*). 
+
+3. **Gene Regulation Networks (GRNs)** 
+   - Regulatory network analysis using SCENIC+ (*03_Script/02_RegulatoryNetworkAnalysis*) highlighted key transcription factors driving the functional specialization of NK subsets. 
+
+4. **Functional and Metabolic Profiling** 
+   - Functional annotation using gene ontology and KEGG enrichment (*03_Script/03_GO_KEGG*) characterized the unique biological roles of NK subsets. 
+   - Metabolic investigation (*03_Script/17_Metabo_Investigation*) revealed significant metabolic traits associated with each subset. 
+   - Cytokine response profiling (*03_Script/26_Cytosig_Analysis*) demonstrated the differential responsiveness of subsets to various cytokines. 
+
+5. **Differentiation Trajectories** 
+   - A three-step approach was employed to trace NK cell differentiation trajectories: 
+     - RNA velocity analysis (*03_Script/04_RNAvelocity*). 
+     - Pseudotime analysis with Monocle3 (*03_Script/05_Monocle*). 
+     - Diffusion map analysis (*03_Script/13_Destiny*). 
+
+---
+
+## Data Accessibility
+
+All data from this study are publicly accessible through the [Human Cell Atlas Portal](https://collections.cellatlas.io/meta-nk). 
+These datasets are part of the Human Cell Atlas effort, enabling researchers to download or interactively explore the data directly on the portal. 
+
+
+
+
 
 
