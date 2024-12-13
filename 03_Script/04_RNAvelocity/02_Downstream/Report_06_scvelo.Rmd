@@ -1,0 +1,217 @@
+---
+title: " Analysis Seurat scRNAseq"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    highlight: espresso
+    theme: yeti
+    toc: yes
+    toc_depth: 1
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '1'
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## CMVnegDonorA velocity analysis
+
+
+
+```{r , echo=FALSE, message=FALSE,fig.width=10,fig.height=6}
+
+library(Seurat)
+library(SeuratDisk)
+library(SeuratWrappers)
+library(stringr)
+
+
+
+
+Seurat_Object<-readRDS(paste0(PATH_SEURAT_RDS,"/PBMC_V2Chem_VF1.rds"))
+ldat <- ReadVelocity(file = PATH_LOOM)
+
+```
+
+
+```{r , echo=FALSE, message=FALSE,fig.width=10,fig.height=6} 
+
+Seurat_Object<-subset(Seurat_Object, subset = as.character(SAMPLE))
+Object2loom <- as.Seurat(x = ldat)
+Object2loom [["RNA"]] <- Liver2loom[["spliced"]]
+name_cells <- str_replace_all(WhichCells(Object2loom ), pattern = "possorted_genome_bam_WTAS8:", replacement = "")
+name_cells <- str_replace_all(name_cells, pattern = "x", replacement = "")
+Object2loom  <- RenameCells(Object2loom , new.names = name_cells)
+Object2loom <-subset(Object2loom ,cells=substr(colnames(Liver2),1,16))
+Liver2loom@meta.data$seurat_clusters<-Liver2@meta.data$seurat_clusters
+VariableFeatures(Liver2loom)<-VariableFeatures(Liver2)
+
+
+
+
+
+Liver2loom <- ScaleData(Liver2loom)#,vars.to.regress = "nCount_RNA")
+Liver2loom<- RunPCA(Liver2loom)#, features = intersect_genes)
+Liver2loom<- ProjectDim(Liver2loom)
+
+
+Liver2loom <- RunUMAP(Liver2loom, dims = 1:30)
+Liver2loom@reductions$umap@cell.embeddings[,1:2]<-Liver2@reductions$umap@cell.embeddings[,1:2]
+DimPlot(Liver2loom,group.by = "seurat_clusters")
+#Liver2loom <- FindNeighbors(Liver2loom, dims = 1:20)
+#Liver2loom <- FindClusters(Liver2loom)
+DefaultAssay(Liver2loom) <- "RNA"
+SaveH5Seurat(Liver2loom, filename = "Liver2loom.h5Seurat", overwrite = TRUE)
+Convert("Liver2loom.h5Seurat", dest = "h5ad", overwrite = TRUE)
+```
+
+```{python}
+# In Python
+import scvelo as scv
+adata = scv.read("Liver2loom.h5ad")
+adata
+```
+
+```{python}
+
+scv.pp.filter_and_normalize(adata, min_shared_counts=20, n_top_genes=2000)
+
+```
+
+
+
+```{python}
+adata.obs['seurat_clusters'] = adata.obs['seurat_clusters'].astype('category')
+scv.pl.proportions(adata,groupby="seurat_clusters")
+```          
+
+
+```{python}
+scv.pp.moments(adata, n_pcs=20, n_neighbors=100)
+```
+
+```{python}
+scv.tl.velocity(adata)
+
+```
+
+
+```{python}
+scv.tl.velocity_graph(adata)
+
+```
+
+
+```{python}
+scv.pl.velocity_embedding_stream(adata, basis="umap", color="seurat_clusters")
+
+```
+
+```{python}
+scv.pl.velocity_embedding_grid(adata, basis="umap", color="seurat_clusters",arrow_length=10)
+
+```
+
+
+```{python}
+scv.pl.velocity_embedding(adata, basis="umap", color="seurat_clusters", arrow_length=5, arrow_size=5, dpi=120)
+
+```
+
+
+```{python}
+scv.tl.recover_dynamics(adata)
+
+```
+
+
+
+```{python}
+scv.tl.latent_time(adata)
+
+```
+
+
+
+```{python}
+scv.pl.scatter(adata, color="latent_time", color_map="gnuplot")
+
+```
+
+
+
+```{python}
+top_genes = adata.var["fit_likelihood"].sort_values(ascending=False).index[:300]
+scv.pl.heatmap(adata, var_names=top_genes, sortby="latent_time", col_color="seurat_clusters", n_convolve=100)
+
+```
+
+
+
+
+```{python}
+scv.tl.rank_velocity_genes(adata, groupby='seurat_clusters', min_corr=.3)
+
+df = scv.DataFrame(adata.uns['rank_velocity_genes']['names'])
+df.head()
+
+```
+
+
+```{python}
+scv.tl.velocity_confidence(adata)
+keys = 'velocity_length', 'velocity_confidence'
+scv.pl.scatter(adata, c=keys, cmap='coolwarm', perc=[5, 95])
+```
+
+
+
+```{python}
+scv.pl.velocity_graph(adata, threshold=.1)
+```
+
+
+
+
+
+```{python}
+scv.tl.velocity_pseudotime(adata)
+scv.pl.scatter(adata, color='velocity_pseudotime', cmap='gnuplot')
+```
+
+```{python}
+scv.tl.terminal_states(adata)
+scv.pl.scatter(adata, color=[ 'root_cells', 'end_points'])
+```
+
+
+```{python}
+top_genes = adata.var['fit_likelihood'].sort_values(ascending=False).index
+scv.pl.scatter(adata, basis=top_genes[:15], ncols=2, frameon=False)
+```
+
+
+```{python}
+scv.tl.rank_dynamical_genes(adata, groupby='seurat_clusters')
+df = scv.get_df(adata, 'rank_dynamical_genes/names')
+df.head(5)
+```
+
+
+
+
+```{python}
+adata.uns['neighbors']['distances'] = adata.obsp['distances']
+adata.uns['neighbors']['connectivities'] = adata.obsp['connectivities']
+
+scv.tl.paga(adata, groups='seurat_clusters')
+df = scv.get_df(adata, 'paga/transitions_confidence', precision=2).T
+#df.style.background_gradient(cmap='Blues').format('{:.2g}')
+#df
+scv.pl.paga(adata, basis='umap', size=50, alpha=.1,
+min_edge_width=2, node_size_scale=1.5)
+```
