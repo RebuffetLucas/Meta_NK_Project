@@ -1,0 +1,183 @@
+---
+output:
+  html_document:
+    theme: yeti
+    highlight: espresso
+    toc: true
+    toc_float: false
+    toc_depth: 2
+---
+
+
+
+
+<!-- Javascript for zooming on figures (adapted from: https://stackoverflow.com/questions/40401680) -->
+
+<!-- Jquery import conflicts with DT::datatable so needs to be commented here -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
+
+<style>
+.zoomDiv {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  background-color: #FFFFFF;
+  box-shadow: 0px 0px 50px #888888;
+  width: fit-content;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+}
+
+.zoomImg {
+  width: 100%;
+}
+</style>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('body').prepend("<div class=\"zoomDiv\"><img src=\"\" class=\"zoomImg\"></div>");
+    // onClick for all img except the zoomed one and link ones (filter)
+    // use 'img.zoom' and out.extra='class=\"zoom\"' in chunk to specify manually which chunk images can be zoomed
+    $('img:not(.zoomImg)').filter(':not(a *)').click(function() {
+      $('.zoomImg').attr('src', $(this).attr('src'));
+      $('.zoomDiv').show();
+    });
+    // onClick function for hiding div
+    $('img.zoomImg').click(function() {
+      $('.zoomDiv').hide();
+    });
+  });
+</script>
+
+
+
+
+```{r rmd_setKnitrOptions, include=FALSE}
+# Set hook for PNG optimization ('optipng' must be installed on system)
+#knitr::knit_hooks$set(optipng = knitr::hook_optipng)
+
+# Set chunks default options
+knitr::opts_chunk$set(results='asis',
+                      echo = FALSE,           # Do not show chunks code
+                      message = FALSE,        # Hide R regular text output in reports
+                      warning = FALSE,        # Show warning messages
+                      error = TRUE,           # Do not stop generating report on errors
+                      cache = FALSE,          # Disable chunk result caching
+                      cache.comments = FALSE, # Changing comments does not invalidate cache
+                      fig.dim = c(10, 10),      # Size of device for R figures
+                      autodep = TRUE,         # Automatic chunk dependencies if cache enabled
+                      optipng = '-o2');       # PNG optimization level (2=default, 5=slow, 7=very slow)
+```
+
+
+
+```{r rmd_loadParamsAndDependencies, warning=FALSE, cache = FALSE}
+### Define working folder
+WORKING_DIR   = getwd();
+
+
+### Load libraries, global functions/variables, and chunks
+source( file.path( WORKING_DIR, "00A_Global_Dependencies.R"));
+
+# Import chunks from source files
+read_chunk( path=file.path( WORKING_DIR, "01a_TransferOfLabel_StandardSeurat.R"));
+read_chunk( path=file.path( WORKING_DIR, "02_Diagnostic_after_LabelTransfer.R"));
+```
+
+```{r options, warning = TRUE, fig.dim = c(9,6)}
+options(future.globals.maxSize = 8000 * 1024^2)
+```
+```{r, echo=FALSE,include = FALSE}
+# You need this code to conduct the magic dependences attaching...
+DT::datatable(matrix(),extensions = 'Buttons',  options = list(dom = 'Blfrtip', buttons = c('excel', "csv")))
+```
+
+```{r rmd_initFunctions}
+
+### Create output directory
+dir.create( PATH_ANALYSIS_OUTPUT, showWarnings = FALSE);
+
+
+### Record starting time (for report and file names)
+startTime = Sys.time();
+startTimeReport   = format( startTime, "%Y %m %d %H:%M:%S")
+startTimeFileName = format( startTime, "%Y_%m_%d_%H_%M_%S")
+
+
+### Initialize utils
+
+# Create a hash for all parameters
+paramsHash = digest( environment(), algo="murmur32");
+
+# Set seed for pseudo random number generator
+set.seed(SEED);
+
+# Set the use of multiple cores using 'future' library, as implemented in Seurat3 when possible
+# https://github.com/satijalab/seurat/issues/457
+plan(strategy = "multicore", workers = NBCORES);
+
+```
+
+
+---
+title: `r paste( GLOBAL_DESCRIPTION, ANALYSIS_STEP_NAME, sep ="<BR>")`
+---
+
+
+## Run informations {.tabset .tabset-fade}
+
+### Run
+<center>
+```{r rmd_runInfo_run}
+pander( c( 'Date'     = startTimeReport,
+           'Sample'   = EXPERIMENT_NAME,
+           'Hash'     = paramsHash));
+```
+</center>
+
+### Parameters
+```{r rmd_runInfo_params}
+listParams = as.list( paramsEnv);
+pander(listParams[order(names(listParams))]); # Show params in alphabetical order
+```
+
+### System
+<center>
+```{r rmd_runInfo_sysInfo}
+showSimpleDT( Sys.info())
+```
+</center>
+
+### R
+```{r rmd_runInfo_r}
+pander( sessionInfo());
+```
+
+<!-- Ending the tabset section -->
+<!-- ## {.toc-ignore} -->
+<br /><br />
+
+
+
+
+# Data analysis
+
+## Load the data
+
+
+
+```{r rmd_dataLoad, warning = FALSE, fig.dim = c(20,10)}
+<<TransferOfLabel_StandardSeurat>>
+```
+
+```{r rmd_Diagnostic, warning = FALSE, fig.dim = c(30,10)}
+<<DiagnosticAfterLabelTransfer>>
+```
+
+
+
+
