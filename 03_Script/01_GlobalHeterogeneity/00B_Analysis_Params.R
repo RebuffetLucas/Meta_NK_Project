@@ -45,5 +45,33 @@ FINDMARKERS_LOGFC_THR = 0.25     # Limit testing to genes which show, on average
 FINDMARKERS_PVAL_THR  = 0.001    # PValue threshold for identification of significative markers
 FINDMARKERS_SHOWTOP   = 20      # Number of marker genes to show in report and tables (NULL for all)
 
-VARIABLE_FEATURES_METHOD = VARIABLE_FEATURES
+NUMBER_TOP_SCORING = 20
+
+#Order legends:
+
+ORDER_CLUST_LEGEND = c(  "NK1A" ,  "NK1B", "NK1C", "NKint","NK2" , "NK3")
+
+ORDER_CLUST_LEGEND2 = c(  "NK1A" ,  "NK1B", "NK1C",  "NKint","NK2" , "NK3A", "NK3B", "NK3C")
+ORDER_CLUST_LEGEND3 = c("NK1","NK2","NK3")
+
+#Colors
+
+palette<-c('NK1C'='#F8766D','NKint'='#8494FF',
+           'NK1A'='#0CB702',
+           'NK1B'='#00BFC4','NK2'='#ED68ED',
+           'NK3'='#ABA300')
+
+
+
+palette2 = c('NK1C'='#F8766D','NKint'='#8494FF',
+             'NK1A'='#0CB702',
+             'NK1B'='#00BFC4','NK2'='#ED68ED',
+             'NK3A'='#C77CFF', 'NK3C'="#ABA300", 'NK3B'="#00A9FF")
+
+palette3 = c('NK1'='#F8766D','NK3'='#0CB702',
+             'NK2'='#8494FF')
+
+palette4 = c('NK1'='#F8766D','NK3'='#0CB702',
+             'NK2'='#8494FF', 'NKint'='#C77CFF')
+
 

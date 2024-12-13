@@ -1,35 +1,39 @@
-#Make a PCA with all the subsets
-
-#If installation is needed
-#install.packages("ggforce")
-#remotes::install_version("ggforce" , "0.4.0")
-#devtools::install_github("thomasp85/ggforce")
-
-#Load library
 library(ade4)
 library(magrittr)
 library(factoextra)
 
+install.packages("ggforce")
+remotes::install_version("ggforce" , "0.4.0")
+#devtools::install_github("thomasp85/ggforce")
 
 #Make a PCA for all clusters
-PBMC = readRDS(PATH_CURATED_OBJECT)
+PBMC = readRDS("/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/VF1/PBMC_V2Chem_VF1.rds")
 
+#Keeping only the genes conserved across samples
+minrow= rownames(PBMC)
+PBMC = subset(PBMC , features = minrow)
+PBMC= SetIdent(PBMC, value = "FirstClust")
 
 #ONLY VariABLE FEATURES:
+VF1= readRDS("/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/VariableFeatures.rds")
 
-FEATURES_TO_USE=  readRDS(PATH_VARIABLE_FEATURES)
+FEATURES_TO_USE= VF1
 
 #Normalization
+
 sce_Merged= as.SingleCellExperiment(PBMC)
 sce_Merged_Rescaled = multiBatchNorm(sce_Merged,  batch = sce_Merged$orig.ident)
 Merged_Seurat_Rescaled= as.Seurat(sce_Merged_Rescaled)
 
 
-#Scaling
+
 PBMC=ScaleData(Merged_Seurat_Rescaled, features = minrow, do.scale = DATA_SCALE , do.center = DATA_CENTER )
 
 
-#With ComplexHeatmap:
+
+
+
+#Try with ComplexHeatmap:
 cluster.averages <- AverageExpression(PBMC, group.by = "FirstClust", features = FEATURES_TO_USE , slot= "scale.data")
 mat = cluster.averages$RNA
 
@@ -113,11 +117,18 @@ p_PCA = fviz_pca_ind(res.pca,
              legend= "none"
 )  + theme(text = element_text(size = 20))  +  coord_equal()
 
-
-png(file= paste0(PATH_SAVE_FIGURES, "PCA_Fig.png"), width = 20, height = 20,  units = "cm", res=600 )
-    p_PCA
+png(file="/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/PCA_Without_Elipse.png", width = 20, height = 20,  units = "cm", res=600 )
+p_PCA
 dev.off()
-    
+
+
+
+
+#Try with ComplexHeatmap:
+cluster.averages <- AverageExpression(PBMC, group.by = c("SecondClust","orig.ident"), features = minrow , slot= "data")
+mat = cluster.averages$RNA
+mat= t(mat)
+
 
 
 

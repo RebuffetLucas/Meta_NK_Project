@@ -1,6 +1,7 @@
-#Look at the NK3 subset
 
-PBMC= readRDS(PATH_CURATED_OBJECT)
+
+
+PBMC= readRDS("/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/VF1/PBMC_V2Chem_VF1.rds")
 
 DimPlot(PBMC, cols = palette)
 
@@ -16,7 +17,7 @@ VlnPlot(NK3, features= "CCL5", group.by = "orig.ident")
 
 p2 = VlnPlot(PBMC, features= "KLRC2", group.by = "orig.ident")
 
-png(file= paste0(PATH_SAVE_FIGURES, "/VlnPlot_KLRC2_Across_Patient.png"),  width = 30, height = 15,  units = "cm", res=600 )
+png(file="/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/VlnPlot_KLRC2_Across_Patient.png", width = 30, height = 15,  units = "cm", res=600 )
 p1
 dev.off()
 
@@ -65,6 +66,12 @@ data_CMVpos <- subset(data_long, Var3 == "CMVpos")
 colnames(data_CMVneg) <- c("FirstClust", "NKG2Cstatus", "CMVstatus", "Count")
 colnames(data_CMVpos) <- c("FirstClust", "NKG2Cstatus", "CMVstatus", "Count")
 
+# Viewing the dataframes
+print("CMV Negative:")
+print(data_CMVneg)
+
+print("CMV Positive:")
+print(data_CMVpos)
 
 # Calculate the proportions
 data_long$Proportion <- with(data_long, ave(Count, Var1, Var3, FUN = function(x) x / sum(x)))
@@ -81,8 +88,7 @@ p6 = ggplot(data_NKG2Cpos, aes(x = Var1, y = Proportion, fill = Var3)) +
 
 p6
 
-
-png(file= paste0(PATH_SAVE_FIGURES, "/BarGraph_NKG2C_CMVNegvsPos.png"), width = 18, height = 12,  units = "cm", res=600 )
+png(file="/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/BarGraph_NKG2C_CMVNegvsPos.png", width = 18, height = 12,  units = "cm", res=600 )
 p6
 dev.off()
 

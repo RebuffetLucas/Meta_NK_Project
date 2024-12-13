@@ -4,27 +4,44 @@ library(rlist)
 library(reshape2)
 
 #Alternative with new names:
+#PBMC= readRDS("/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/PBMC_V2_VF1_AllGenes_NewNames.rds")
+
 
 #Load Seurat Object
+PBMC_for_Metadata = readRDS("/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/VF1/PBMC_V2Chem_VF1.rds")
 
-PBMC= readRDS(PATH_CURATED_OBJECT)
+PBMC= readRDS("/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/PBMC_V2_VF1_AllGenes.rds")
 
+PBMC@meta.data = PBMC_for_Metadata@meta.data
 
-#Normalization
 
 PBMC_Norm= as.SingleCellExperiment(PBMC)
 PBMC_Norm = multiBatchNorm(PBMC_Norm,  batch = PBMC_Norm$orig.ident)
 PBMC_Norm= as.Seurat(PBMC_Norm)
 
-#Scaling
+
 All_genes= rownames(PBMC_Norm)
 PBMC=ScaleData(PBMC_Norm, features = All_genes, do.scale = DATA_SCALE , do.center = DATA_CENTER )
 
+PBMC$FirstClust = factor(PBMC$FirstClust, levels= ORDER_CLUST_LEGEND)
 
-#Set UP a minimum
+
+
+
+FeaturePlot(PBMC_for_Metadata, features= "ZNF683", pt.size  =0.4, max.cutoff = 'q50')  + scale_color_gradientn(colors = rev(brewer.pal(11, "RdYlBu")))
+VlnPlot(PBMC, features= "TRIB1", group.by = "SecondClust") 
+
+VlnPlot(Seurat_NK2 , features= "TRIB1") 
+
+VlnPlot(PBMC, features= "NCR1") 
+
+
+#Get the list of genes present in at list X percent of the cells
+
+
 MIN_PCT_GENE= 5
 
-#Extract KIR genes
+
 KIR_inthenames = rownames(PBMC)[grepl("KIR", rownames(PBMC))]
 
 
@@ -35,8 +52,10 @@ PBMC= SetIdent(PBMC, value = "FirstClust")
 PBMC$FirstClust= droplevels(PBMC$FirstClust)
 
 
-#List of genes of interest
+
 List_BrightvsDim = c("XCL1", "XCL2", "GZMK" , "FGFBP2", "GZMB", "KLRC1", "FCGR3A")
+
+
 
 List_Genes1 = c( "CXCL10", "CXCL13", "CSF1", "XCL1", "XCL2", "TNF", "IFNG", "CCL3", "CCL4", "CCL5", "CSF2", "FLT3LG", "IL1B" , "IL16", "IL17C","IL18","IL32", "CCL4L2", "CCL3L3" )
 
@@ -116,9 +135,97 @@ ht_list= p1 %v% p2 %v% p3 %v% p4 %v% p5 %v% p6 %v% p7  %v% p8
 draw(ht_list, heatmap_legend_side = "top")
 p14 = draw(ht_list, heatmap_legend_side = "top")
 
-png(file= PATH_FIG_HEATMAP, width = 18, height = 30,  units = "cm", res=600 )
+p14
+
+png(file="/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/HeatMap_Usualsupects_V2.png", width = 18, height = 30,  units = "cm", res=600 )
+p14
+dev.off()
+
+#Fig3a
+pdf(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/pdf_figures_NI/Fig3a.pdf", width = 8, height = 15)
 p14
 dev.off()
 
 
 
+
+
+
+
+
+
+
+
+VlnPlot(PBMC, features= c("GZMB"))
+
+
+DimPlot(PBMC_for_Metadata, group.by = "nkg2c")
+
+
+
+p1 = Heatmap(mat.scaled[intersect(List_Genes1, rownames(cluster.averages$RNA)),], cluster_columns = FALSE, col= rev(brewer.pal(n=4,name="RdYlBu")) )
+p2 = Heatmap(mat.scaled[intersect(List_Genes2, rownames(cluster.averages$RNA)),], cluster_columns = FALSE, col= rev(brewer.pal(n=4,name="RdYlBu")), border = TRUE )
+p3 = Heatmap(mat.scaled[intersect(List_Genes3, rownames(cluster.averages$RNA)),], cluster_columns = FALSE, col= rev(brewer.pal(n=4,name="RdYlBu")), border = TRUE )
+p4 = Heatmap(mat.scaled[intersect(List_Genes4, rownames(cluster.averages$RNA)),], cluster_columns = FALSE, col= rev(brewer.pal(n=4,name="RdYlBu")), border = TRUE )
+p5 = Heatmap(mat.scaled[intersect(List_Genes5, rownames(cluster.averages$RNA)),], cluster_columns = FALSE, col= rev(brewer.pal(n=4,name="RdYlBu")), border = TRUE )
+p6 = Heatmap(mat.scaled[intersect(List_Genes6, rownames(cluster.averages$RNA)),], cluster_columns = FALSE, col= rev(brewer.pal(n=4,name="RdYlBu")), border = TRUE )
+p7 = Heatmap(mat.scaled[intersect(List_Genes7, rownames(cluster.averages$RNA)),], cluster_columns = FALSE, col= rev(brewer.pal(n=4,name="RdYlBu")), border = TRUE )
+
+
+
+
+
+
+
+
+
+
+
+
+cluster.averages <- AverageExpression(PBMC, group.by = "FirstClust", features = List_Demaria , slot= "data")
+
+
+
+for (i in 1:6){
+  cluster.averages <- AverageExpression(PBMC, group.by = "FirstClust", features = List_of_Lists[[i]] , slot= "data")
+  print(pheatmap(cluster.averages$RNA, scale= "row", cluster_rows = TRUE, cluster_cols = FALSE, fontsize_col = 10, fontsize_row = 15))
+}
+
+
+cluster.averages <- AverageExpression(PBMC, group.by = "FirstClust", features = List_Genes1 , slot= "data")
+p1 = pheatmap(cluster.averages$RNA, scale= "row", cluster_rows = TRUE, cluster_cols = FALSE, fontsize_col = 10, fontsize_row = 15)
+
+cluster.averages <- AverageExpression(PBMC, group.by = "FirstClust", features = List_Genes2 , slot= "data")
+p2 = pheatmap(cluster.averages$RNA, scale= "row", cluster_rows = TRUE, cluster_cols = FALSE, fontsize_col = 10, fontsize_row = 15)
+
+
+
+
+
+
+
+pheatmap(cluster.averages$RNA, scale= "row", cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 15, fontsize_row = 10, cutree_rows = 6, gaps_row = c(10, 16, 25, 34,  39))
+
+
+VlnPlot(Merged_Seurat_Rescaled, feature = "KLRC1")
+
+head(cluster.averages[["RNA"]][, 1:5])
+
+#Return this mean as a seuratObject
+
+orig.levels= levels(PBMC$FirstClust)
+Idents(PBMC) <- gsub(pattern = " ", replacement = "_", x = Idents(PBMC))
+orig.levels <- gsub(pattern = " ", replacement = "_", x = orig.levels)
+levels(PBMC) <- orig.levels
+cluster.averages <- AverageExpression(PBMC, return.seurat = TRUE)
+cluster.averages
+
+
+DoHeatmap(cluster.averages, features = rownames(cluster.averages) , size = 3, draw.lines = FALSE, label= TRUE, group.by = "FirstClust")
+
+
+
+
+
+
+DoHeatmap(PBMC, features= List_total , group.by = "FirstClust",slot= "scale.data")

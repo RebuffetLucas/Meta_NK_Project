@@ -1,5 +1,5 @@
 #Optimization of the granularity of the first clustering
-#Using Sab's method to assess the purity of the clusters
+#Using Sabrina's method to assess the purity of the clusters
 
 install.packages("clustree")
 
@@ -12,24 +12,24 @@ library(ROGUE)
 library(ggplot2)
 library(tidyverse)
 
-#PBMC_Sab= readRDS("/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK4/05_Output/01_GlobalHeterogeneity/PBMC_All.rds")
+#PBMC_Sabrina= readRDS("/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK4/05_Output/01_GlobalHeterogeneity/PBMC_All.rds")
 
-PBMC_Sab = Merged_Seurat_Rescaled
+PBMC_Sabrina = Merged_Seurat_Rescaled
 #Check the object
-DimPlot(PBMC_Sab, reduction = "UMAP")
-FeaturePlot(PBMC_Sab, reduction = "UMAP", feature= c("XCL1","GZMB", "GZMK", "CXCR4"))
+DimPlot(PBMC_Sabrina, reduction = "UMAP")
+FeaturePlot(PBMC_Sabrina, reduction = "UMAP", feature= c("XCL1","GZMB", "GZMK", "CXCR4"))
 
 
 # Remove previous clustering results
-PBMC_Sab$seurat_clusters <- NULL
-PBMC_Sab@meta.data <- PBMC_Sab@meta.data %>% dplyr::select(-matches("^RNA_snn_res."))
+PBMC_Sabrina$seurat_clusters <- NULL
+PBMC_Sabrina@meta.data <- PBMC_Sabrina@meta.data %>% dplyr::select(-matches("^RNA_snn_res."))
 
-#DefaultAssay(PBMC_Sab ) <- "integrated"
+#DefaultAssay(PBMC_Sabrina ) <- "integrated"
 
 
 # The first step aims to compute cells clusters using a graph-based clustering approach
 
-PBMC_Sab <- FindNeighbors(object = PBMC_Sab, 
+PBMC_Sabrina <- FindNeighbors(object = PBMC_Sabrina, 
                               reduction = "harmony",
                               dims = 1:30, 
                               verbose = FALSE,
@@ -37,7 +37,7 @@ PBMC_Sab <- FindNeighbors(object = PBMC_Sab,
 
 
 for(i in seq(0.5, 1.4 , 0.1)){
-  PBMC_Sab <- FindClusters(object = PBMC_Sab, 
+  PBMC_Sabrina <- FindClusters(object = PBMC_Sabrina, 
                                resolution = i, 
                                verbose = FALSE,
                                random.seed = SEED)
@@ -49,7 +49,7 @@ for(i in seq(0.5, 1.4 , 0.1)){
 # Choose cluster optimal resolution : visualize cluster stability per res--------------------------
 
 # Compute clustree
-clustree.out <- clustree(PBMC_Sab ,prefix = "RNA_snn_res.", layout="sugiyama", node_colour = "sc3_stability", node_text_colour = "white")
+clustree.out <- clustree(PBMC_Sabrina ,prefix = "RNA_snn_res.", layout="sugiyama", node_colour = "sc3_stability", node_text_colour = "white")
 print(clustree.out)
 
 # Compute mean stability per res
@@ -66,8 +66,8 @@ for(i in 1:(nrow(stability.df)-1)){
 opt.res <- stability.df %>% filter(difference < 0 | is.na(difference)) %>% filter(mean.stability==max(mean.stability)) %>% mutate(RNA_snn_res.= paste0("RNA_snn_res.",RNA_snn_res.)) %>% pull(RNA_snn_res.)
 
 
-PBMC_Sab[["integrated.optimal.resolution"]] <- PBMC_Sab[[opt.res[1]]]
-PBMC_Sab[["integrated.optimal.resolution"]] <- paste0("integrated.Cl.",PBMC_Sab$integrated.optimal.resolution)
+PBMC_Sabrina[["integrated.optimal.resolution"]] <- PBMC_Sabrina[[opt.res[1]]]
+PBMC_Sabrina[["integrated.optimal.resolution"]] <- paste0("integrated.Cl.",PBMC_Sabrina$integrated.optimal.resolution)
 
 
 
@@ -87,8 +87,8 @@ ggplot(stability.df, aes(x=RNA_snn_res. , y=mean.stability, group = 1)) +
          axis.text = element_text(lineheight=.8, size = 12, angle = 45,  vjust = 1, hjust = 1))
 
 
-DimPlot(PBMC_Sab, reduction = "UMAP", group.by = "RNA_snn_res.0.7", label = TRUE, label.size = )
+DimPlot(PBMC_Sabrina, reduction = "UMAP", group.by = "RNA_snn_res.0.7", label = TRUE, label.size = )
 
-DimPlot(PBMC_Sab, reduction = "UMAP", group.by = "RNA_snn_res.0.6")
+DimPlot(PBMC_Sabrina, reduction = "UMAP", group.by = "RNA_snn_res.0.6")
 
-DimPlot(PBMC_Sab, reduction = "umap", group.by = "RNA_snn_res.1.2", pt.size = 1.8 )
+DimPlot(PBMC_Sabrina, reduction = "umap", group.by = "RNA_snn_res.1.2", pt.size = 1.8 )

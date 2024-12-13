@@ -1,20 +1,38 @@
 #Making HD Figures for the paper
 
+#def function
+
+# +- std
+data_summary <- function(x) {
+  m <- median(x)
+  ymin <- m-sd(x)
+  ymax <- m+sd(x)
+  return(c(y=m,ymin=ymin,ymax=ymax))
+}
 
 
-PBMC= readRDS(PATH_CURATED_OBJECT)
 
+#Load objects
+PBMC= readRDS("/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/VF1/PBMC_V2Chem_VF1.rds")
+
+PBMC= readRDS("/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/PBMC_V2_VF1_AllGenes_NewNames.rds")
+
+PBMC  =SetIdent(PBMC, value = "FirstClust")
+
+
+
+ 
 p1 = DimPlot(PBMC, label=TRUE, order = rev(ORDER_CLUST_LEGEND), cols = palette) + NoAxes()
 
 
 
-png(file=paste0(PATH_SAVE_FIGURES, "DimPlot.png"), width = 15, height = 10,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/UMAP_6pops.png", width = 15, height = 10,  units = "cm", res=600 )
 p1 
 dev.off()
 
 p_number = DimPlot(PBMC, label=TRUE, order = rev(ORDER_CLUST_LEGEND2), group.by = "SecondClust",cols = palette2) + NoAxes()
 
-png(file=paste0(PATH_SAVE_FIGURES, "UMAP_8pops.png"), width = 15, height = 10,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/UMAP_8pops_V2.png", width = 15, height = 10,  units = "cm", res=600 )
 p_number
 dev.off()
 
@@ -25,9 +43,25 @@ names(palette_number) = c("0", "5", "2", "4", "6", "1", "3", "8")
 
 p_number2 = DimPlot(PBMC, label=TRUE, order = rev(ORDER_CLUST_LEGEND2), group.by = "SecondClust",cols = palette_number, ) + NoAxes()
 
-png(file= paste0(PATH_SAVE_FIGURES, "UMAP_8pops_V2_number.png"), width = 15, height = 10,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/UMAP_8pops_V2_number.png", width = 15, height = 10,  units = "cm", res=600 )
 p_number2
 dev.off()
+
+
+#Fig2a
+ggsave(
+  "/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/pdf_figures_NI/Fig2a.pdf",
+  plot = p1,
+  device = NULL,
+  path = NULL,
+  scale = 1,
+  width = 20,
+  height = 14,
+  units = "cm",
+  dpi = 600,
+  limitsize = TRUE,
+  bg = NULL
+)
 
 
 
@@ -39,15 +73,31 @@ p7 = ggplot(PBMC@meta.data, aes(x=Dataset, fill=seurat_clusters)) + geom_bar(pos
 
 p5 +  p7
 
-png(file= paste0(PATH_SAVE_FIGURES, "BarGraph_Patients_6pops.png"), width = 18, height = 18,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/BarGraph_Patients_6pops.png", width = 18, height = 18,  units = "cm", res=600 )
 p5 
 dev.off()
 
-png(file= paste0(PATH_SAVE_FIGURES, "BarGraph_Datasets_6pops.png"), width = 12, height = 12,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/BarGraph_datasets_6pops.png", width = 12, height = 12,  units = "cm", res=600 )
 p7
 dev.off()
 
  
+#Fig2b
+ggsave(
+  "/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/pdf_figures_NI/Fig2b.pdf",
+  plot = p5,
+  device = NULL,
+  path = NULL,
+  scale = 1,
+  width = 20,
+  height = 14,
+  units = "cm",
+  dpi = 600,
+  limitsize = TRUE,
+  bg = NULL
+)
+
+
 
 #Point plots for the proportion of 6 clusters in each patient
   #BoxPlot version
@@ -70,7 +120,7 @@ p12 = Clusters_Proportions %>%
   theme_classic() +  theme(text = element_text(size = 15))       
 
 
-png(file= paste0(PATH_SAVE_FIGURES,"/MoustachePlot_Proportions_Patients_6pops.png"), width = 20, height = 20,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/MoustachePlot_Proportions_Patients_6pops.png", width = 20, height = 20,  units = "cm", res=600 )
 p12
 dev.off()
 
@@ -89,16 +139,19 @@ p14
 
 
 
-png(file= paste0(PATH_SAVE_FIGURES,"/BarPlot_Proportions_Patients_6pops.png"), width = 20, height = 20,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/BarPlot_Proportions_Patients_6pops.png", width = 20, height = 20,  units = "cm", res=600 )
 p14
 dev.off()
 
 #Do the same with NK1 , 2 and 3
 
+PBMC$seurat_clusters2 = PBMC$seurat_clusters
 
-p11 = DimPlot(PBMC, group.by = "seurat_clusters", cols= palette4, label= TRUE)
+levels(PBMC$seurat_clusters2) = c("NK1","NK1", "NK1", "NKint" ,"NK2", "NK3")
 
-png(file= paste0(PATH_SAVE_FIGURES,"/UMAP_4pops.png"), width = 15, height = 10,  units = "cm", res=600 )
+p11 = DimPlot(PBMC, group.by = "seurat_clusters2", cols= palette4, label= TRUE)
+
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/UMAP_4pops.png", width = 15, height = 10,  units = "cm", res=600 )
 p11
 dev.off()
 
@@ -108,7 +161,7 @@ levels(PBMC$seurat_clusters2) = c("NK1","NK1", "NK1", "NK1" ,"NK2", "NK3")
 
 p10 = DimPlot(PBMC, group.by = "seurat_clusters2", cols= palette3, label= TRUE)
 
-png(file= paste0(PATH_SAVE_FIGURES,"/UMAP_3pops.png"), width = 15, height = 10,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/UMAP_3pops.png", width = 15, height = 10,  units = "cm", res=600 )
 p10
 dev.off()
 
@@ -131,7 +184,7 @@ p12 = Clusters_Proportions %>%
   geom_jitter( position = position_jitter(0.4),  aes(fill = orig.ident) , colour= "black", shape = 21, inherit.aes = TRUE, size= 3) +
   theme_classic() +  theme(text = element_text(size = 15))       
 
-png(file= paste0(PATH_SAVE_FIGURES,"/BarPlot_Proportions_Patients_3pops.png"), width = 20, height = 20,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/BarPlot_Proportions_Patients_3pops.png", width = 20, height = 20,  units = "cm", res=600 )
 p12
 dev.off()
 
@@ -154,7 +207,7 @@ p20 = Clusters_Proportions %>%
   theme_classic() +  theme(text = element_text(size = 15))       
 
 
-png(file= paste0(PATH_SAVE_FIGURES,"/MoustachePlot_Proportions_Patients_8pops.png"), width = 20, height = 20,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/MoustachePlot_Proportions_Patients_8pops.png", width = 20, height = 20,  units = "cm", res=600 )
 p20
 dev.off()
 
@@ -169,16 +222,19 @@ DimPlot(PBMC)
 
 
 #Scoring with CITEseq
-PBMC= readRDS(PATH_CURATED_OBJECT)
+PBMC= readRDS("/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/VF1/PBMC_V2Chem_VF1.rds")
 
-Markers_Seurat= readRDS(PATH_MARKERS) #Already ready for scoring
+Markers_Seurat= readRDS("/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/12_CITEseq_Analysis/DEG/All_Markers_CITEseq3clusters.rds") #Not ready for scoring
+
+#write.csv(Markers_Seurat, "/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/20_Sup_Tables_csv_xlsx/DEG_CITEseq_NK1_NK2_NK3.csv", row.names=TRUE)
+#write_xlsx(Markers_Seurat,"/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/20_Sup_Tables_csv_xlsx/DEG_CITEseq_NK1_NK2_NK3.xlsx")
 
 
 #Extracting top markers
 Markers_Seurat %>%
   filter(avg_log2FC>0) %>%
   filter( p_val_adj < 5e-2) %>%
-  #filter(!grepl("RPL|RPS|MT-", gene)) %>% #We use RPS and RPL for scoring but nor for plotind DotPlots
+  #filter(!grepl("RPL|RPS|MT-", gene)) %>% #We use RPS and RPL for scoring but not for plotind DotPlots
   group_by(cluster) %>%
   arrange(-avg_log2FC) %>%
   top_n(n = NUMBER_TOP_SCORING, wt = avg_log2FC) -> top_All
@@ -205,12 +261,66 @@ for (i in names(MONITORED_Markers)){
 }
 
 #VlnPlot and save
-p3 = FeaturePlot(PBMC, features = paste0(names(MONITORED_Markers),"1"), max.cutoff = 1.5)   &    scale_colour_gradientn(colours = rev(brewer.pal(n = 11, name = "RdBu")))
-p3 = VlnPlot(PBMC, features = paste0(names(MONITORED_Markers),"1"), pt.size = 0,  cols = palette)
+p3 = FeaturePlot(PBMC, features = paste0(names(MONITORED_Markers),"1"), max.cutoff = 1.5)   &    scale_colour_gradientn(colours = rev(brewer.pal(n = 11, name = "RdBu"))) 
+p3 = VlnPlot(PBMC, features = paste0(names(MONITORED_Markers),"1"), pt.size = 0,  cols = palette) & stat_summary(fun.data=data_summary,color="black")
 
-png(file= paste0(PATH_SAVE_FIGURES, "/VlnPlot_Scoring_WNN_on35KUMAP.png"), width = 30, height = 15,  units = "cm", res=600 )
+p4 = VlnPlot(PBMC, features = paste0(names(MONITORED_Markers),"1"), pt.size = 0,  cols = palette)
+
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/VlnPlot_Scoring_WNN_on35KUMAP.png", width = 30, height = 15,  units = "cm", res=600 )
 p3 
 dev.off()
+
+
+#Fig2c
+ggsave(
+  "/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/pdf_figures_NI/Fig2c.pdf",
+  plot = p3,
+  device = NULL,
+  path = NULL,
+  scale = 1,
+  width = 25,
+  height = 15,
+  units = "cm",
+  dpi = 600,
+  limitsize = TRUE,
+  bg = NULL
+)
+
+
+#VlnPlot scoring NK3 in CMVneg vs CMVpos
+#Extract only Romagnani Dataset
+PBMC_Dataset4 = subset(PBMC, subset  = Dataset== "Dataset4")
+PBMC_Dataset4 = subset(PBMC_Dataset4, subset  = FirstClust== "NK3")
+
+
+#Separate CMVpos an neg
+PBMC_Dataset4$orig.ident = droplevels(PBMC_Dataset4$orig.ident)
+table(PBMC_Dataset4$orig.ident)
+
+#Add CMV status
+PBMC_Dataset4$CMVstatus = PBMC_Dataset4$orig.ident
+levels(PBMC_Dataset4$CMVstatus) = c("CMVneg", "CMVneg", "CMVpos", "CMVpos", "CMVpos")
+table(PBMC_Dataset4$CMVstatus)
+
+p3 = VlnPlot(PBMC_Dataset4, features = "NK_31", group.by = "CMVstatus",pt.size = 0) & stat_summary(fun.data=data_summary,color="black")
+
+
+p3
+
+#Fig2d
+ggsave(
+  "/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/pdf_figures_NI/Fig2d.pdf",
+  plot = p3,
+  device = NULL,
+  path = NULL,
+  scale = 1,
+  width = 10,
+  height = 15,
+  units = "cm",
+  dpi = 600,
+  limitsize = TRUE,
+  bg = NULL
+)
 
 
 #Markers DotPlot
@@ -221,8 +331,8 @@ PBMC= SetIdent(PBMC, value = "FirstClust")
 All_Markers = FindAllMarkers(PBMC , only.pos = FINDMARKERS_ONLYPOS, method= FINDMARKERS_METHOD , min.pct =  FINDMARKERS_MINPCT, logfc.threshold = FINDMARKERS_LOGFC_THR , verbose = TRUE)
 
 
-write.csv(All_Markers, PATH_OUTPUT_CSV, row.names=TRUE)
-write_xlsx(All_Markers,PATH_OUTPUT_xlsx)
+write.csv(All_Markers, "/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/20_Sup_Tables_csv_xlsx/DEG_scRNAseq_NK1ABC_NK2_NK3_NKint.csv", row.names=TRUE)
+write_xlsx(All_Markers,"/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/20_Sup_Tables_csv_xlsx/DEG_scRNAseq_NK1ABC_NK2_NK3_NKint.xlsx")
 
 
 
@@ -239,23 +349,40 @@ DotPlot(PBMC, features =  unique(top10$gene) , cols = "RdBu") + theme(axis.text.
 p4 = DotPlot(PBMC, features =  unique(top10$gene) , cols = "RdBu") + theme(axis.text.x = element_text(angle = 90))
 
 #Save that in HD
-png(file= paste0(PATH_SAVE_FIGURES, "/DotPlot_Signatures_removeRPS_RPL_MT_RdBu.png"), width = 55, height = 15,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/DotPlot_Signatures_removeRPS_RPL_MT_RdBu.png", width = 55, height = 15,  units = "cm", res=600 )
 p4
 dev.off()
+
+#Fig2e
+ggsave(
+  "/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/pdf_figures_NI/Fig2e.pdf",
+  plot = p4,
+  device = NULL,
+  path = NULL,
+  scale = 1,
+  width = 60,
+  height = 12,
+  units = "cm",
+  dpi = 600,
+  limitsize = TRUE,
+  bg = NULL
+)
+
+
 
 
 
 #For sup figure:
 
 #DotPlot 8 clusters
-test= readRDS(PATH_CURATED_OBJECT)
+test= readRDS("/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/PBMC_V2_VF1.rds")
 DimPlot(test)
 levels(test@active.ident) = c("NK1C", "NK3A",  "NK1A", "NK3C" , "NK1B", "NKint", "NK2", "NK3B")
 test@active.ident = factor(test@active.ident, levels= ORDER_CLUST_LEGEND2) 
 
 p15 = DimPlot(test, cols = palette2, label = TRUE)+ NoAxes()
 
-png(file= paste0(PATH_SAVE_FIGURES, "/UMAP_8clusters.png"), width = 15, height = 10,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/UMAP_8clusters.png", width = 15, height = 10,  units = "cm", res=600 )
 p15
 dev.off()
 
@@ -272,7 +399,7 @@ All_Markers %>%
 DotPlot(test, features = unique(top10$gene), cols = "RdBu") + theme(axis.text.x = element_text(angle = 90))
 p5 =DotPlot(test, features = unique(top10$gene), cols = "RdBu") + theme(axis.text.x = element_text(angle = 90))
 
-png(file= paste0(PATH_SAVE_FIGURES, "/DotPlot_8clusters_Signatures_removeRPS_RPL_MT_RdBu.png"), width = 55, height = 15,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/DotPlot_8clusters_Signatures_removeRPS_RPL_MT_RdBu.png", width = 55, height = 15,  units = "cm", res=600 )
 p5
 dev.off()
 
@@ -292,7 +419,7 @@ All_Markers %>%
 DotPlot(test, features = unique(top10$gene), cols = "Spectral") + theme(axis.text.x = element_text(angle = 90))
 p5 = DotPlot(test, features =  unique(top10$gene) , cols = "Spectral", col.max = 1.5 , col.min = -1.5) + theme(axis.text.x = element_text(angle = 90))
 
-png(file= paste0(PATH_SAVE_FIGURES, "/DotPlot_NK3_3subpops_removeRPS_RPL_MT.png"), width = 55, height = 15,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/DotPlot_NK3_3subpops_removeRPS_RPL_MT.png", width = 55, height = 15,  units = "cm", res=600 )
 p5
 dev.off()
 
@@ -304,21 +431,22 @@ p16 = FeaturePlot(PBMC, features= c("GZMK", "XCL1",  "KLRC1", "SELL")) & NoAxes(
 p17 =FeaturePlot(PBMC, features= c("GZMB", "FCGR3A",  "SPON2", "FCER1G")) & NoAxes() &   theme( plot.title = element_text( face = "italic") )
 p18 = FeaturePlot(PBMC, features= c("GZMH", "CCL5",  "KLRC2", "IL32")) & NoAxes() &   theme( plot.title = element_text( face = "italic") )
 
-png(file= paste0(PATH_SAVE_FIGURES, "/FeaturePlot_Markers_NK1.png"), width = 20, height = 15,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/FeaturePlot_Markers_NK1.png", width = 20, height = 15,  units = "cm", res=600 )
 p17
 dev.off()
 
-png(file= paste0(PATH_SAVE_FIGURES, "/FeaturePlot_Markers_NK2.png"), width = 20, height = 15,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/FeaturePlot_Markers_NK2.png", width = 20, height = 15,  units = "cm", res=600 )
 p16
 dev.off()
 
-png(file= paste0(PATH_SAVE_FIGURES, "/FeaturePlot_Markers_NK3.png"), width = 20, height = 15,  units = "cm", res=600 )
+png(file="/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/Final_Figures/FeaturePlot_Markers_NK3.png", width = 20, height = 15,  units = "cm", res=600 )
 p18
 dev.off()
 
 
 
 #Proportion of subset for Dataset4
+PBMC= readRDS("/mnt/DOSI/EVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK5/05_Output/01_GlobalHeterogeneity/Analysis_V2Chem/PBMC_V2_VF1_AllGenes_NewNames.rds")
 
   #Extract only Romagnani Dataset
 PBMC_Dataset4 = subset(PBMC, subset  = Dataset== "Dataset4")
@@ -356,7 +484,7 @@ p14 = Clusters_Proportions %>%
   geom_jitter( position = position_jitter(0.4),  aes(fill = orig.ident) , colour= "black", shape = 21, inherit.aes = TRUE, size= 2) +
   theme_classic() +  theme(text = element_text(size = 15)) + facet_wrap(~ CMVstatus)
 
-#Ca ça marche
+#This works better
 p14 = Clusters_Proportions %>%
   ggplot(aes(x = seurat_clusters, y = Freq, group = seurat_clusters, color = orig.ident)) +
   geom_bar(stat = "summary", fun = "mean", position = "dodge", fill= "white", color= palette[ORDER_CLUST_LEGEND], size=1.2) +
@@ -379,7 +507,7 @@ p14 = Clusters_Proportions %>%
 p14
 
 
-p14+ facet_grid(~ CMVstatus)
+p14 + facet_grid(~ CMVstatus)
 
 
 
@@ -415,6 +543,5 @@ p15 = Clusters_Proportions %>%
   geom_jitter(aes(color = orig.ident), position = position_jitterdodge(jitter.width = 0.4, dodge.width = 0.8), shape = 21, inherit.aes = TRUE, size= 2) +
   theme_classic() + 
   theme(text = element_text(size = 15)) 
-
 
 

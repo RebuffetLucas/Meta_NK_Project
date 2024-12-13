@@ -68,4 +68,17 @@ library(reshape2)
 library(rlist)
 
 
+#Load Janin Object
+
+
+#PBMCscaled= readRDS(file= "/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK3/00_RawData/Seurat_Obj_other_samples/Sent_By_Janine/merged.rds")
+#colnames(PBMCscaled)=make.unique(colnames(PBMCscaled))
+#PBMCscaled= as.Seurat(PBMCscaled)
+
+
+#Check that it's the right document
+#DimPlot(PBMCscaled, reduction = "UMAP", group.by = "cluster")
+
+#Add the NKG2C status
+#statusCMV= read.csv("/mnt/DOSI/SUEVLAB/BIOINFO/BIOINFO_PROJECT/Meta_NK2/FromJanine/01_Reference/nkg2c.csv") #Balek
 
